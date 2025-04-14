@@ -67,4 +67,3 @@
 
 ---
 
-*Note: Requirements inferred based on industry standards and typical museum website features. Actual implementation may vary.*
