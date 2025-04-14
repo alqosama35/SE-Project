@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>British Museum Website&colon; Functional &amp; Non-Functional Requirements</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="british-museum-website-functional--non-functional-requirements">British Museum Website: Functional &amp; Non-Functional Requirements</h1>
+<h2 id="functional-requirements">Functional Requirements</h2>
+<h3 id="1-user-interaction--navigation">1. <strong>User Interaction &amp; Navigation</strong></h3>
+<ul>
+<li>Search functionality for artifacts, exhibitions, and content (with filters like date, category, or keywords).</li>
+<li>Interactive map for museum layout, galleries, and amenities.</li>
+<li>Mobile-responsive design for cross-device compatibility.</li>
+<li>Accessibility tools (e.g., screen reader support, alt text for images).</li>
+</ul>
+<h3 id="2-content-management">2. <strong>Content Management</strong></h3>
+<ul>
+<li>Dynamic display of exhibitions, events, and news.</li>
+<li>Virtual tours or 360° views of galleries.</li>
+<li>Educational resources (downloadable PDFs, lesson plans, videos).</li>
+<li>Multilingual content support for international visitors.</li>
+</ul>
+<h3 id="3-e-commerce--transactions">3. <strong>E-Commerce &amp; Transactions</strong></h3>
+<ul>
+<li>Online ticket booking with timed entry slots.</li>
+<li>Membership registration/renewal (profile management, exclusive benefits).</li>
+<li>Online shop for merchandise (cart, checkout, payment gateway integration).</li>
+<li>Donation processing with tax receipt generation.</li>
+</ul>
+<h3 id="4-events--engagement">4. <strong>Events &amp; Engagement</strong></h3>
+<ul>
+<li>Event/workshop registration system.</li>
+<li>Newsletter signup and email notifications.</li>
+<li>Social media integration (sharing, feeds).</li>
+</ul>
+<h3 id="5-administrative-features">5. <strong>Administrative Features</strong></h3>
+<ul>
+<li>Content Management System (CMS) for staff to update exhibits/events.</li>
+<li>Analytics dashboard for tracking traffic, user behavior, and sales.</li>
+<li>User feedback/contact forms with automated responses.</li>
+</ul>
+<h3 id="6-apis--integration">6. <strong>APIs &amp; Integration</strong></h3>
+<ul>
+<li>Public API for developers to access collection metadata.</li>
+<li>Integration with third-party services (e.g., payment processors, email marketing tools).</li>
+</ul>
+<hr>
+<h2 id="non-functional-requirements">Non-Functional Requirements</h2>
+<h3 id="1-performance--reliability">1. <strong>Performance &amp; Reliability</strong></h3>
+<ul>
+<li>Fast load times (&lt;3 seconds) even for high-resolution images/videos.</li>
+<li>Scalability to handle traffic spikes (e.g., during exhibition launches).</li>
+<li>99.9% uptime with minimal downtime for maintenance.</li>
+</ul>
+<h3 id="2-security">2. <strong>Security</strong></h3>
+<ul>
+<li>GDPR/CCPA compliance for data privacy (cookie consent, data encryption).</li>
+<li>Secure payment processing (PCI-DSS compliance).</li>
+<li>Regular security audits and vulnerability testing.</li>
+</ul>
+<h3 id="3-usability">3. <strong>Usability</strong></h3>
+<ul>
+<li>Intuitive navigation with clear menus and breadcrumbs.</li>
+<li>WCAG 2.1 AA compliance for accessibility.</li>
+<li>Consistent UI/UX across all pages.</li>
+</ul>
+<h3 id="4-compliance--legal">4. <strong>Compliance &amp; Legal</strong></h3>
+<ul>
+<li>Copyright adherence for digital content (images, text).</li>
+<li>Terms of service and privacy policy transparency.</li>
+</ul>
+<h3 id="5-backup--recovery">5. <strong>Backup &amp; Recovery</strong></h3>
+<ul>
+<li>Daily backups of user data and content.</li>
+<li>Disaster recovery plan to restore functionality within 24 hours.</li>
+</ul>
+<h3 id="6-seo--analytics">6. <strong>SEO &amp; Analytics</strong></h3>
+<ul>
+<li>Optimized metadata and structured data for search engines.</li>
+<li>Integration with Google Analytics/SEO tools.</li>
+</ul>
+<hr>
+<p><em>Note: Requirements inferred based on industry standards and typical museum website features. Actual implementation may vary.</em></p>
+
+            
+            
+        </body>
+        </html>
