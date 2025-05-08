@@ -1,0 +1,137 @@
+/* Custom Theme Colors */
+:root {
+    --primary: #ffbf28;
+    --primary-dark: #e6ac24;
+    --primary-light: #ffd166;
+    --secondary: #000000;
+    --secondary-light: #333333;
+    --white: #ffffff;
+}
+
+/* Primary Color Overrides */
+.bg-gradient-primary {
+    background: linear-gradient(180deg, var(--secondary) 10%, var(--secondary-light) 100%) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid var(--primary) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+/* Sidebar Customization */
+.sidebar {
+    background: linear-gradient(180deg, var(--secondary) 10%, var(--secondary-light) 100%) !important;
+}
+
+.sidebar .nav-item .nav-link {
+    color: var(--white) !important;
+}
+
+.sidebar .nav-item .nav-link:hover {
+    color: var(--primary) !important;
+}
+
+.sidebar .nav-item.active .nav-link {
+    color: var(--primary) !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.sidebar-brand {
+    color: var(--primary) !important;
+}
+
+.sidebar-brand:hover {
+    color: var(--primary-light) !important;
+}
+
+.sidebar-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Card and Border Customization */
+.card-header {
+    background-color: var(--white);
+    border-bottom: 1px solid var(--primary-light);
+}
+
+.card {
+    border: 1px solid var(--primary-light);
+}
+
+/* Button Customization */
+.btn-outline-primary {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: var(--white);
+}
+
+/* Chart Colors */
+.chart-area .ct-series-a .ct-line {
+    stroke: var(--primary);
+}
+
+.chart-area .ct-series-a .ct-point {
+    stroke: var(--primary);
+}
+
+.chart-pie .ct-series-a .ct-slice-pie {
+    fill: var(--primary);
+}
+
+/* Table Customization */
+.table thead th {
+    background-color: var(--primary-light);
+    color: var(--secondary);
+}
+
+/* Alert and Badge Customization */
+.badge-primary {
+    background-color: var(--primary);
+    color: var(--secondary);
+}
+
+/* Dropdown Customization */
+.dropdown-menu {
+    border-color: var(--primary-light);
+}
+
+.dropdown-item:hover {
+    background-color: var(--primary-light);
+}
+
+/* Form Control Customization */
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(255, 191, 40, 0.25);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+} 
