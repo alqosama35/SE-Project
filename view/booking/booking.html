@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Book Your Visit - TAEM</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/global.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <style>
+        .calendar-container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .calendar-header {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            padding: 15px;
+        }
+        .calendar-day {
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .calendar-day:hover {
+            background: #f0f0f0;
+        }
+        .calendar-day.selected {
+            background: #ffc107;
+            color: #000;
+        }
+        .calendar-day.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 15px;
+        }
+        .time-slot {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .time-slot:hover {
+            border-color: #ffc107;
+        }
+        .time-slot.selected {
+            background: #ffc107;
+            border-color: #ffc107;
+            color: #000;
+        }
+        .ticket-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .ticket-type {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .quantity-btn:hover {
+            background: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+<!-- Top Bar -->
+<section id="top" class="bg_back pt-3 pb-3">
+    <div class="container-xl">
+        <div class="row top_1">
+            <div class="col-md-6">
+                <div class="top_1l">
+                    <p class="text-white mb-0 font_14">Opening hours: <span class="col_yell ms-1">8 AM to 7 PM all days</span></p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="top_1r text-end">
+                    <ul class="mb-0 font_14">
+                        <li class="text-white d-inline-block me-2">Also see in: </li>
+                        <li class="d-inline-block"><a class="col_yell" href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li class="d-inline-block"><a class="col_yell" href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li class="d-inline-block"><a class="col_yell" href="#"><i class="fa fa-linkedin"></i></a></li>
+                        <li class="d-inline-block"><a class="col_yell" href="#"><i class="fa fa-tumblr"></i></a></li>
+                        <li class="d-inline-block"><a class="col_yell" href="#"><i class="fa fa-vimeo"></i></a></li>
+                        <li class="d-inline-block"><a class="col_yell" href="#"><i class="fa fa-pinterest"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Header Top -->
+<section id="head_top" class="pt-3">
+    <div class="container-xl">
+        <div class="row head_top1">
+            <div class="col-md-3">
+                <div class="head_top1l">
+                    <h4 class="mb-0"><a href="index.html"><img id="logo" src="img/logo.png"/></a></h4>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="head_top1r">
+                    <div class="head_top1rim row">
+                        <div class="col-md-4">
+                            <div class="row head_top1ri">
+                                <div class="col-md-3">
+                                    <div class="head_top1ril">
+                                        <span class="d-inline-block bg_yell text-white text-center fs-3"><i class="fa fa-map-marker"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="head_top1rir">
+                                        <h6 class="mb-0 font_14 lh-base">Giza, Egypt<br>The Ancient Egyptians Museum</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row head_top1ri">
+                                <div class="col-md-3">
+                                    <div class="head_top1ril">
+                                        <span class="d-inline-block bg_yell text-white text-center fs-3"><i class="fa fa-phone"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="head_top1rir">
+                                        <h6 class="mb-0 font_14 lh-base">
+                                            <a href="#">+(123) 456-7890</a><br>
+                                            <a href="#">+(987) 654-3130</a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row head_top1ri">
+                                <div class="col-md-3">
+                                    <div class="head_top1ril">
+                                        <span class="d-inline-block bg_yell text-white text-center fs-3"><i class="fa fa-envelope"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="head_top1rir">
+                                        <h6 class="mb-0 font_14 lh-base">
+                                            <a href="#">info@gmail.com</a><br>
+                                            <a href="#">atoz@gmail.com</a>
+                                        </h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Navigation -->
+<div class="main position-relative">
+    <div class="main_1 position-absolute w-100">
+        <section id="header">
+            <nav class="navbar navbar-expand-md navbar-light bg_yell p-0" id="navbar_sticky">
+                <div class="container-xl">
+                    <a class="p-0 navbar-brand text-white fw-bold pt-1" href="index.html"><img id="logo2" src="img/logo2.png"/></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mb-0 nav_right">
+                            <li class="nav-item">
+                                <a class="nav-link" href="index.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="about.html">About</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    Blog
+                                </a>
+                                <ul class="dropdown-menu drop_1">
+                                    <li><a class="dropdown-item" href="blog.html">Blog</a></li>
+                                    <li><a class="dropdown-item border-0" href="blog_detail.html">Blog Detail</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    Events
+                                </a>
+                                <ul class="dropdown-menu drop_1">
+                                    <li><a class="dropdown-item" href="event.html">Events</a></li>
+                                    <li><a class="dropdown-item border-0" href="detail.html">Events Detail</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                    Pages
+                                </a>
+                                <ul class="dropdown-menu drop_1">
+                                    <li><a class="dropdown-item" href="gallery.html">Gallery</a></li>
+                                    <li><a class="dropdown-item border-0" href="account.html">My Account</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="contact.html">Contact</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link button ms-4 text-uppercase" href="booking.html">Book Now</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </section>
+    </div>
+
+<!-- Booking Section -->
+<section id="booking" class="pt-5 pb-5">
+    <div class="container-xl">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="calendar-container mb-4">
+                    <div class="calendar-header">
+                        <h4 class="mb-0">Select Date and Time</h4>
+                    </div>
+                    <div class="calendar-grid" id="calendar">
+                        <!-- Calendar days will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="time-slots-container bg-white p-4 rounded shadow">
+                    <h4 class="mb-3">Available Time Slots</h4>
+                    <div class="time-slots" id="timeSlots">
+                        <!-- Time slots will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="ticket-summary">
+                    <h4 class="mb-4">Your Tickets</h4>
+                    
+                    <div class="ticket-type">
+                        <div>
+                            <h6 class="mb-0">Adult</h6>
+                            <small class="text-muted">EGP 100</small>
+                        </div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity('adult', -1)">-</button>
+                            <span id="adultQuantity">0</span>
+                            <button class="quantity-btn" onclick="updateQuantity('adult', 1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="ticket-type">
+                        <div>
+                            <h6 class="mb-0">Child (5-15)</h6>
+                            <small class="text-muted">EGP 50</small>
+                        </div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity('child', -1)">-</button>
+                            <span id="childQuantity">0</span>
+                            <button class="quantity-btn" onclick="updateQuantity('child', 1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="ticket-type">
+                        <div>
+                            <h6 class="mb-0">Student</h6>
+                            <small class="text-muted">EGP 75</small>
+                        </div>
+                        <div class="quantity-control">
+                            <button class="quantity-btn" onclick="updateQuantity('student', -1)">-</button>
+                            <span id="studentQuantity">0</span>
+                            <button class="quantity-btn" onclick="updateQuantity('student', 1)">+</button>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5>Total</h5>
+                        <h5 id="totalAmount">EGP 0</h5>
+                    </div>
+
+                    <button class="button w-100 text-uppercase" onclick="proceedToPayment()">
+                        Continue to Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer id="footer" class="pt-4 pb-4 bg_back">
+    <div class="container-xl">
+        <div class="row footer_1">
+            <div class="col-md-12 text-center">
+                <p class="mb-0 text-white">© 2024 TAEM. All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize calendar
+    initializeCalendar();
+    // Initialize time slots
+    initializeTimeSlots();
+});
+
+function initializeCalendar() {
+    const calendar = document.getElementById('calendar');
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    
+    // Add day headers
+    days.forEach(day => {
+        const dayHeader = document.createElement('div');
+        dayHeader.className = 'calendar-day';
+        dayHeader.textContent = day;
+        calendar.appendChild(dayHeader);
+    });
+
+    // Add calendar days
+    const today = new Date();
+    for (let i = 0; i < 35; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() + i);
+        
+        const dayElement = document.createElement('div');
+        dayElement.className = 'calendar-day';
+        dayElement.textContent = date.getDate();
+        
+        if (i === 0) {
+            dayElement.classList.add('selected');
+        }
+        
+        dayElement.addEventListener('click', () => selectDate(dayElement));
+        calendar.appendChild(dayElement);
+    }
+}
+
+function initializeTimeSlots() {
+    const timeSlots = document.getElementById('timeSlots');
+    const times = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00'];
+    
+    times.forEach(time => {
+        const slot = document.createElement('div');
+        slot.className = 'time-slot';
+        slot.textContent = time;
+        slot.addEventListener('click', () => selectTimeSlot(slot));
+        timeSlots.appendChild(slot);
+    });
+}
+
+function selectDate(element) {
+    document.querySelectorAll('.calendar-day').forEach(day => day.classList.remove('selected'));
+    element.classList.add('selected');
+}
+
+function selectTimeSlot(element) {
+    document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+    element.classList.add('selected');
+}
+
+function updateQuantity(type, change) {
+    const quantityElement = document.getElementById(`${type}Quantity`);
+    let quantity = parseInt(quantityElement.textContent) + change;
+    quantity = Math.max(0, quantity);
+    quantityElement.textContent = quantity;
+    updateTotal();
+}
+
+function updateTotal() {
+    const adultQuantity = parseInt(document.getElementById('adultQuantity').textContent);
+    const childQuantity = parseInt(document.getElementById('childQuantity').textContent);
+    const studentQuantity = parseInt(document.getElementById('studentQuantity').textContent);
+    
+    const total = (adultQuantity * 100) + (childQuantity * 50) + (studentQuantity * 75);
+    document.getElementById('totalAmount').textContent = `EGP ${total}`;
+}
+
+function proceedToPayment() {
+    const selectedDate = document.querySelector('.calendar-day.selected').textContent;
+    const selectedTime = document.querySelector('.time-slot.selected')?.textContent;
+    
+    if (!selectedTime) {
+        alert('Please select a time slot');
+        return;
+    }
+    
+    const totalTickets = parseInt(document.getElementById('adultQuantity').textContent) +
+                        parseInt(document.getElementById('childQuantity').textContent) +
+                        parseInt(document.getElementById('studentQuantity').textContent);
+    
+    if (totalTickets === 0) {
+        alert('Please select at least one ticket');
+        return;
+    }
+    
+    // Redirect to payment page with selected details
+    window.location.href = `payment.html?date=${selectedDate}&time=${selectedTime}&tickets=${totalTickets}`;
+}
+</script>
+</body>
+</html> 
