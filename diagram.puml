@@ -1,0 +1,411 @@
+@startuml
+
+' ========================
+' Interfaces & Enums
+' ========================
+interface Payable {
+    + getTotal(): Decimal
+    + getDescription(): String
+}
+
+enum MemberRole {
+    VISITOR
+    MEMBER
+    ADMIN
+    RESEARCHER
+    TOUR_GUIDE
+}
+
+enum MuseumObjectStatus {
+    AVAILABLE
+    ON_LOAN
+    UNDER_RESTORATION
+    RESERVED
+    ARCHIVED
+}
+
+' ========================
+' Core Classes
+' ========================
+class Visitor {
+    - ObjectId id
+
+    + browseExhibits(): List<MuseumObject>
+    + viewExhibitDetails(exhibitId: ObjectId): MuseumObject
+    + searchExhibits(query: String): List<MuseumObject>
+    + viewToursAndEvents(): List<Event>
+    + viewDonationPrograms(): List<DonationProgram>
+    + applyAsVolunteer(applicationDetails: String): boolean
+    + viewFamilyGroupVisitsInfo(): List<Visit>
+    + viewMuseumMap(): Map
+    + viewFoodAndDrink(): List<Vendor>
+    + shopSouvenirs(): List<Shopping>
+}
+
+class Member {
+    - ObjectId id
+    - String name
+    - String email
+    - String password
+    - MemberRole role
+
+    + register(name, email, password): boolean
+    + login(email, password): boolean
+    + logout(sessionId): void
+    + updateProfile(name, email): void
+    + changePassword(oldPass, newPass): boolean
+
+    ' Tours & Events
+    + bookTourEvent(eventId: ObjectId, participants: int): Booking
+    + viewMyBookings(): List<Booking>
+    + cancelBooking(bookingId: ObjectId): boolean
+    + modifyBooking(bookingId: ObjectId, participants: int): boolean
+
+    ' Donations
+    + submitDonation(programId: ObjectId, amount: Decimal): Donation
+}
+
+class Admin {
+    - ObjectId id
+
+    + manageUserAccounts(): void
+    + manageContent(): void
+    + approveRejectRegistrations(): void
+    + viewSystemReports(): void
+    + manageFeedbackAndInquiries(): void
+    + manageAccessPermissions(): void
+}
+
+class Research {
+    - ObjectId id
+    - String title
+    - String description
+    - DateTime startDate
+    - DateTime endDate
+    - Researcher researcher
+    - List<MuseumObject> relatedObjects
+
+    + submitProposal(proposal: String): boolean
+    + updateDetails(title: String, description: String): void
+    + addRelatedObject(objectId: ObjectId): void
+    + removeRelatedObject(objectId: ObjectId): void
+    + getResearchDuration(): int
+}
+
+class Researcher {
+    - ObjectId id
+
+    + accessResearchResources(): void
+    + submitResearchProposals(proposal: String): boolean
+    + scheduleResearchAppointments(dateTime: DateTime): boolean
+    + collaborateWithStaff(staffId: ObjectId): void
+    + requestRestrictedAccess(resourceId: ObjectId): boolean
+    + viewResearchHistory(): List<String>
+}
+
+class TourGuide {
+    - ObjectId id
+
+    + manageGuideProfile(): void
+    + viewFeedbackAndRatings(): List<Feedback>
+    + submitTourFeedback(feedback: Feedback): void
+}
+
+class Feedback {
+    - ObjectId id
+    - User user
+    - String targetType
+    - ObjectId targetId
+    - String content
+    - Integer rating
+    - DateTime submittedAt
+    - String status
+
+    + submit(): void
+    + edit(newContent: String): void
+    + approve(): void
+    + reject(reason: String): void
+}
+
+class Contact {
+    - ObjectId id
+    - User user
+    - String name
+    - String email
+    - String subject
+    - String message
+    - DateTime sentAt
+    - String status
+
+    + send(): void
+    + respond(response: String): void
+    + close(): void
+}
+
+class Loan {
+    - ObjectId id
+    - User borrower
+    - MuseumObject item
+    - DateTime loanDate
+    - DateTime dueDate
+    - DateTime returnDate
+    - String status
+
+    + request(borrower: User, item: MuseumObject): boolean
+    + approve(): void
+    + renew(newDueDate: DateTime): boolean
+    + returnItem(): void
+    + isOverdue(): boolean
+}
+
+class MuseumObject {
+    - ObjectId id
+    - String name
+    - String description
+    - String origin
+    - String period
+    - String material
+    - String imageUrl
+    - MuseumObjectStatus status
+
+    + viewDetails(): MuseumObject
+    + requestLoan(userId): Loan
+    + updateMetadata(details): void
+    + uploadImage(imageFile): void
+}
+
+class Restoration {
+    - ObjectId id
+    - MuseumObject object
+    - DateTime startDate
+    - DateTime endDate
+    - String description
+    - String status
+
+    + begin(): void
+    + complete(): void
+    + updateStatus(status: String): void
+    + assignStaff(staffName: String): void
+}
+
+class Ticket {
+    - ObjectId id
+    - String type
+    - Decimal price
+    - DateTime validFrom
+    - DateTime validTo
+
+    + validateTicket(): boolean
+    + generateQRCode(): String
+}
+
+class Tour {
+    - ObjectId id
+    - String name
+    - int size
+    - TourGuide tourGuide
+}
+
+class Collection {
+    - ObjectId id
+    - String title
+    - String description
+    - List<MuseumObject> museumObjects
+
+    + addMuseumObject(museumObject: MuseumObject): void
+    + removeMuseumObject(id): void
+    + listMuseumObjects(): List<MuseumObject>
+}
+
+class Gallery {
+    - ObjectId id
+    - String name
+    - String floor
+
+    + scheduleDisplay(museumObjectId, dateRange): void
+    + allocateMuseumObject(id): void
+    + removeMuseumObject(id): void
+}
+
+class Exhibition {
+    - ObjectId id
+    - String title
+    - String type
+    - DateTime startDate
+    - DateTime endDate
+    - String description
+
+    + startExhibition(): void
+    + endExhibition(): void
+    + addMuseumObject(id): void
+    + removeMuseumObject(id): void
+    + getDuration(): int
+}
+
+class Event {
+    - ObjectId id
+    - String title
+    - DateTime dateTime
+    - String location
+    - int capacity
+
+    + checkAvailability(): boolean
+}
+
+class Visit {
+    - ObjectId id
+    - String title
+    - DateTime dateTime
+    - String location
+}
+
+class Shopping {
+    - ObjectId id
+    - String itemName
+    - Decimal price
+    - int quantity
+
+    + addToCart(user: User): void
+    + removeFromCart(user: User): void
+    + purchase(user: User): Receipt
+    + getTotal(): Decimal
+    + getDescription(): String
+}
+
+class Booking {
+    - ObjectId id
+    - DateTime bookingDate
+    - String status
+    - int participants
+
+    + confirm(): void
+    + cancel(): void
+    + modifyParticipants(count): void
+    + getTotal(): Decimal
+    + getDescription(): String
+}
+
+class MembershipPlan {
+    - ObjectId id
+    - String name
+    - String benefits
+    - Decimal price
+
+    + isActive(): boolean
+    + calculatePrice(duration): Decimal
+    + listBenefits(): List<String>
+}
+
+class Membership {
+    - ObjectId id
+    - DateTime startDate
+    - DateTime endDate
+
+    + activate(): void
+    + renew(period): void
+    + cancel(): void
+    + isValid(): boolean
+    + getTotal(): Decimal
+    + getDescription(): String
+}
+
+class DonationProgram {
+    - ObjectId id
+    - String name
+    - String description
+    - Decimal goalAmount
+    - Boolean active
+
+    + startProgram(): void
+    + endProgram(): void
+    + updateGoal(amount): void
+    + isActive(): boolean
+}
+
+class Donation {
+    - ObjectId id
+    - Decimal amount
+    - DateTime donatedAt
+    - String paymentMethod
+
+    + processDonation(): Receipt
+    + refund(): boolean
+    + getDonorDetails(): User
+    + getTotal(): Decimal
+    + getDescription(): String
+}
+
+class Notification {
+    - ObjectId id
+    - String email
+    - DateTime subscribedAt
+
+    + subscribe(): void
+    + unsubscribe(): void
+    + sendConfirmationEmail(): void
+}
+
+class Receipt {
+    - ObjectId id
+    - DateTime issuedAt
+    - Decimal totalAmount
+    - String description
+
+    + print(): String
+}
+
+class Payment {
+    - ObjectId id
+    - Decimal amount
+    - DateTime paymentDate
+    - String method
+    - String status
+
+    + process(): Receipt
+    + refund(): boolean
+    + validate(): boolean
+}
+
+' ========================
+' Relationships
+' ========================
+Visitor <|-- Member
+Member <|-- Admin
+Member <|-- Researcher
+Member <|-- TourGuide
+
+Researcher "1" -- "0..*" Research : makes
+Member "1" -- "0..*" Loan : borrows
+Visitor "1" -- "0..*" Feedback : writes
+Visitor "1" -- "0..*" Contact : sends
+Member "1" -- "*" Membership : holds
+Visitor "1" -- "*" Donation : makes
+Member "1" -- "*" Booking : books
+Member "1" -- "*" Notification : subscribesTo
+Membership "*" -- "1" MembershipPlan : basedOn
+Donation "*" -- "1" DonationProgram : for
+Booking "*" -- "1" Event : forEvent
+Booking "*" -- "1" Visit : forVisit
+Booking "*" -- "1" Tour : forTour
+Tour "*" -- "1" TourGuide : ledBy
+Loan "*" -- "1" MuseumObject : of
+MuseumObject "1" -- "*" Loan : loanedVia
+Restoration "*" -- "1" MuseumObject : performedOn
+MuseumObject "1" -- "*" Restoration : hasRestorations
+Collection "1" o-- "*" MuseumObject : includes
+Gallery "1" -- "*" MuseumObject : displays
+Exhibition "1" -- "*" MuseumObject : features
+Ticket "*" -- "1" Booking : forBooking
+Payment "1" -- "1" Receipt : generates
+Donation ..|> Payable
+Membership ..|> Payable
+Shopping ..|> Payable
+Booking ..|> Payable
+Member "1" -- "0..*" Payment : makes
+Payment "1" -- "1" Payable : for
+Member "1" -- "0..*" Shopping : purchases
+Admin "1" -- "*" Feedback : manages
+Admin "1" -- "*" Contact : manages
+Admin "1" -- "*" Restoration : manages
+
+@enduml 
