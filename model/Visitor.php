@@ -585,7 +585,27 @@ class Visitor extends User {
 
     public function submitFeedback(string $feedback): void {
         try {
-            // Implementation would typically involve creating a feedback record
+            if (empty(trim($feedback))) {
+                throw new \InvalidArgumentException("Feedback cannot be empty");
+            }
+
+            $feedbackRecord = new \App\Models\Feedback([
+                'visitor_id' => $this->getAttribute('id'),
+                'content' => $feedback,
+                'status' => 'NEW',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            $feedbackRecord->save();
+
+            // Notify staff about new feedback
+            $notification = new \App\Models\Notification([
+                'type' => 'NEW_FEEDBACK',
+                'message' => "New feedback received from visitor",
+                'priority' => 'MEDIUM',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            $notification->save();
+
         } catch (\Exception $e) {
             error_log("Error submitting feedback for visitor {$this->getAttribute('id')}: " . $e->getMessage());
             throw $e;
@@ -594,7 +614,16 @@ class Visitor extends User {
 
     public function contactSupport(string $message): void {
         try {
-            // Implementation would typically involve creating a support ticket
+            if (empty(trim($message))) {
+                throw new \InvalidArgumentException("Message cannot be empty");
+            }
+
+            $this->createSupportTicket(
+                "Support Request from " . $this->getFullName(),
+                $message,
+                'MEDIUM'
+            );
+
         } catch (\Exception $e) {
             error_log("Error contacting support for visitor {$this->getAttribute('id')}: " . $e->getMessage());
             throw $e;
@@ -613,5 +642,44 @@ class Visitor extends User {
 
     public function getRole(): string {
         return 'VISITOR';
+    }
+
+    public function createSupportTicket(string $subject, string $message, string $priority = 'MEDIUM'): \App\Models\SupportTicket {
+        try {
+            if (empty(trim($subject))) {
+                throw new \InvalidArgumentException("Subject cannot be empty");
+            }
+            if (empty(trim($message))) {
+                throw new \InvalidArgumentException("Message cannot be empty");
+            }
+            if (!in_array($priority, ['LOW', 'MEDIUM', 'HIGH'])) {
+                throw new \InvalidArgumentException("Invalid priority level");
+            }
+
+            $ticket = new \App\Models\SupportTicket([
+                'visitor_id' => $this->getAttribute('id'),
+                'subject' => $subject,
+                'message' => $message,
+                'priority' => $priority,
+                'status' => 'OPEN',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $ticket->save();
+
+            // Create notification for staff
+            $notification = new \App\Models\Notification([
+                'type' => 'NEW_SUPPORT_TICKET',
+                'message' => "New support ticket created: {$subject}",
+                'priority' => $priority,
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            $notification->save();
+
+            return $ticket;
+        } catch (\Exception $e) {
+            error_log("Error creating support ticket for visitor {$this->getAttribute('id')}: " . $e->getMessage());
+            throw $e;
+        }
     }
 } 

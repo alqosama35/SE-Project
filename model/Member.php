@@ -85,10 +85,33 @@ class Member extends Visitor {
 
     public function logout(string $sessionId): void {
         try {
-            // Implementation would typically involve session management
+            // Start session if not already started
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+
+            // Verify session ID matches
+            if (session_id() !== $sessionId) {
+                throw new \RuntimeException("Invalid session ID");
+            }
+
+            // Clear all session variables
+            $_SESSION = array();
+
+            // Destroy the session cookie
+            if (isset($_COOKIE[session_name()])) {
+                setcookie(session_name(), '', time() - 3600, '/');
+            }
+
+            // Destroy the session
             session_destroy();
+
+            // Update last logout time in database
+            $this->setAttribute('last_logout', date('Y-m-d H:i:s'));
+            $this->save();
+
         } catch (\Exception $e) {
-            error_log("Error logging out member: " . $e->getMessage());
+            error_log("Error logging out member {$this->getAttribute('id')}: " . $e->getMessage());
             throw $e;
         }
     }
@@ -250,6 +273,13 @@ class Member extends Visitor {
 
     public function addBooking(Booking $booking): void {
         try {
+            // Set the member_id for the booking
+            $booking->setAttribute('member_id', $this->getId());
+            
+            // Save the booking to database
+            $booking->save();
+            
+            // Add to in-memory array
             $this->bookings[] = $booking;
         } catch (\Exception $e) {
             error_log("Error adding booking: " . $e->getMessage());

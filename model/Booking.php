@@ -2,7 +2,21 @@
 
 namespace App\Models;
 
-class Booking implements Payable {
+class Booking extends Model {
+    protected static string $table = 'bookings';
+    
+    protected array $fillable = [
+        'id',
+        'member_id',
+        'event_id',
+        'participants',
+        'status',
+        'created_at',
+        'updated_at'
+    ];
+
+    private const VALID_STATUSES = ['PENDING', 'CONFIRMED', 'CANCELLED'];
+
     private string $id;
     private \DateTime $bookingDate;
     private string $status;
@@ -11,6 +25,7 @@ class Booking implements Payable {
     private ?Payment $payment = null;
 
     public function __construct(array $attributes = []) {
+        parent::__construct($attributes);
         $this->id = $attributes['id'] ?? uniqid('booking_');
         $this->bookingDate = $attributes['bookingDate'] ?? new \DateTime();
         $this->status = $attributes['status'] ?? 'PENDING';
@@ -120,7 +135,7 @@ class Booking implements Payable {
     }
 
     public function getStatus(): string {
-        return $this->status;
+        return $this->getAttribute('status');
     }
 
     public function getBookingDate(): \DateTime {
@@ -137,5 +152,13 @@ class Booking implements Payable {
 
     public function getPayment(): ?Payment {
         return $this->payment;
+    }
+
+    public function setStatus(string $status): void {
+        if (!in_array($status, self::VALID_STATUSES)) {
+            throw new \InvalidArgumentException("Invalid booking status");
+        }
+        $this->setAttribute('status', $status);
+        $this->save();
     }
 } 

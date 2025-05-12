@@ -4,11 +4,20 @@ namespace App\Models;
 
 use PDO;
 
-class Notification {
-    private $db;
+class Notification extends Model {
+    protected static string $table = 'notifications';
     
-    public function __construct($db) {
-        $this->db = $db;
+    protected array $fillable = [
+        'id',
+        'type',
+        'message',
+        'priority',
+        'created_at',
+        'status'
+    ];
+
+    public function __construct(array $attributes = []) {
+        parent::__construct($attributes);
     }
     
     public function createNotification($userId, $type, $message, $link = null) {

@@ -24,7 +24,24 @@ class Researcher extends Member {
             if (!$this->isActive()) {
                 throw new \RuntimeException("Researcher account is not active");
             }
-            // Implementation for accessing research resources
+
+            // Check if researcher has required permissions
+            if (!$this->hasPermission('access_research_resources')) {
+                throw new \RuntimeException("Insufficient permissions to access research resources");
+            }
+
+            // Log access attempt
+            $accessLog = new AccessLog([
+                'researcher_id' => $this->getAttribute('id'),
+                'timestamp' => date('Y-m-d H:i:s'),
+                'resource_type' => 'research_resources'
+            ]);
+            $accessLog->save();
+
+            // Update last access time
+            $this->setAttribute('last_resource_access', date('Y-m-d H:i:s'));
+            $this->save();
+
         } catch (\Exception $e) {
             error_log("Error accessing research resources for researcher {$this->getAttribute('id')}: " . $e->getMessage());
             throw $e;
@@ -36,7 +53,24 @@ class Researcher extends Member {
             if (empty(trim($proposal))) {
                 throw new \InvalidArgumentException("Research proposal cannot be empty");
             }
-            // Implementation for submitting research proposals
+
+            $researchProposal = new \App\Models\ResearchProposal([
+                'researcher_id' => $this->getAttribute('id'),
+                'content' => $proposal,
+                'status' => 'PENDING',
+                'submitted_at' => date('Y-m-d H:i:s')
+            ]);
+            $researchProposal->save();
+
+            // Notify staff about new proposal
+            $notification = new \App\Models\Notification([
+                'type' => 'NEW_RESEARCH_PROPOSAL',
+                'message' => "New research proposal submitted",
+                'priority' => 'HIGH',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            $notification->save();
+
             return true;
         } catch (\Exception $e) {
             error_log("Error submitting research proposal for researcher {$this->getAttribute('id')}: " . $e->getMessage());
@@ -49,7 +83,24 @@ class Researcher extends Member {
             if ($dateTime < new \DateTime()) {
                 throw new \InvalidArgumentException("Appointment date cannot be in the past");
             }
-            // Implementation for scheduling research appointments
+
+            $appointment = new \App\Models\ResearchAppointment([
+                'researcher_id' => $this->getAttribute('id'),
+                'scheduled_time' => $dateTime->format('Y-m-d H:i:s'),
+                'status' => 'SCHEDULED',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            $appointment->save();
+
+            // Notify staff about new appointment
+            $notification = new \App\Models\Notification([
+                'type' => 'NEW_RESEARCH_APPOINTMENT',
+                'message' => "New research appointment scheduled for " . $dateTime->format('Y-m-d H:i:s'),
+                'priority' => 'MEDIUM',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            $notification->save();
+
             return true;
         } catch (\Exception $e) {
             error_log("Error scheduling research appointment for researcher {$this->getAttribute('id')}: " . $e->getMessage());
@@ -59,11 +110,28 @@ class Researcher extends Member {
 
     public function collaborateWithStaff(string $staffId): void {
         try {
-            $staff = Staff::find($staffId);
+            $staff = \App\Models\Staff::find($staffId);
             if (!$staff) {
                 throw new \InvalidArgumentException("Staff member not found");
             }
-            // Implementation for staff collaboration
+
+            $collaboration = new \App\Models\ResearchCollaboration([
+                'researcher_id' => $this->getAttribute('id'),
+                'staff_id' => $staffId,
+                'status' => 'ACTIVE',
+                'started_at' => date('Y-m-d H:i:s')
+            ]);
+            $collaboration->save();
+
+            // Notify staff member about collaboration
+            $notification = new \App\Models\Notification([
+                'type' => 'NEW_RESEARCH_COLLABORATION',
+                'message' => "New research collaboration request from researcher",
+                'priority' => 'MEDIUM',
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+            $notification->save();
+
         } catch (\Exception $e) {
             error_log("Error collaborating with staff for researcher {$this->getAttribute('id')}: " . $e->getMessage());
             throw $e;
@@ -117,6 +185,20 @@ class Researcher extends Member {
         } catch (\Exception $e) {
             error_log("Error checking active status for researcher {$this->getAttribute('id')}: " . $e->getMessage());
             throw $e;
+        }
+    }
+
+    private function hasPermission(string $permission): bool {
+        try {
+            // Get researcher's role and permissions from database
+            $role = $this->getAttribute('role');
+            $permissions = $this->getAttribute('permissions') ?? [];
+            
+            // Check if researcher has the required permission
+            return in_array($permission, $permissions);
+        } catch (\Exception $e) {
+            error_log("Error checking permission for researcher {$this->getAttribute('id')}: " . $e->getMessage());
+            return false;
         }
     }
 } 

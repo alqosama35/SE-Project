@@ -407,8 +407,25 @@ class MuseumObject extends Model {
             if (!in_array($extension, self::VALID_IMAGE_EXTENSIONS)) {
                 throw new \InvalidArgumentException("Invalid image format");
             }
-            // Implementation for image upload
-            $this->setAttribute('image_url', $imageFile);
+
+            // Create uploads directory if it doesn't exist
+            $uploadDir = __DIR__ . '/../../public/uploads/museum_objects/';
+            if (!file_exists($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Generate unique filename
+            $filename = uniqid('obj_') . '.' . $extension;
+            $targetPath = $uploadDir . $filename;
+
+            // Move uploaded file
+            if (!move_uploaded_file($imageFile, $targetPath)) {
+                throw new \RuntimeException("Failed to move uploaded file");
+            }
+
+            // Set relative path for database storage
+            $relativePath = '/uploads/museum_objects/' . $filename;
+            $this->setAttribute('image_url', $relativePath);
             $this->save();
         } catch (\Exception $e) {
             error_log("Error uploading image for museum object {$this->getAttribute('id')}: " . $e->getMessage());
